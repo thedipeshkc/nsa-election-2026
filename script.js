@@ -133,7 +133,7 @@ async function loadVoteView(){
   let html = `
     <div class="card">
       <h2>Cast Your Vote</h2>
-      <div class="sub">Vote once per contested position. Enter the same email you used for your membership — resubmitting updates your ballot until voting closes.</div>
+      <div class="sub">Vote for any position you care about — you don't need to vote on all of them. Enter the same email you used for your membership; resubmitting updates your ballot until voting closes.</div>
       <label for="vName">Full name</label>
       <input type="text" id="vName" placeholder="e.g. Sujata Thapa">
       <label for="vEmail">Email</label>
@@ -183,24 +183,27 @@ async function submitVote(){
 
   const contested = positions.filter(p => (candidates[p]||[]).length > 1);
   const choices = {};
-  for(const pos of contested){
+  contested.forEach(pos => {
     const checked = document.querySelector(`input[name="vote-${cssEscape(pos)}"]:checked`);
-    if(!checked){
-      errEl.textContent = `Please choose a candidate for ${pos}.`;
-      errEl.style.display = 'block';
-      return;
+    if(checked){
+      choices[pos] = checked.value;
     }
-    choices[pos] = checked.value;
+  });
+
+  if(Object.keys(choices).length === 0){
+    errEl.textContent = 'Please vote for at least one position.';
+    errEl.style.display = 'block';
+    return;
   }
 
   try{
-    await db.collection('votes').doc(email).set({ name, email, choices, timestamp: Date.now() });
+    await db.collection('votes').doc(email).set({ name, email, choices, timestamp: Date.now() }, { merge: true });
     document.getElementById('voteContent').innerHTML = `
       <div class="card">
         <div class="success">
           <div class="check">✓</div>
           <h2>Ballot recorded</h2>
-          <p style="color:var(--muted); margin-top:8px;">Thanks, ${escapeHtml(name.split(' ')[0])} — your vote is in. You can come back and resubmit with the same email if you change your mind before voting closes.</p>
+          <p style="color:var(--muted); margin-top:8px;">Thanks, ${escapeHtml(name.split(' ')[0])} — your vote is in. You can come back and resubmit with the same email if you change your mind or want to vote on more positions before voting closes.</p>
         </div>
       </div>
     `;
