@@ -130,6 +130,19 @@ async function loadVoteView(){
     return;
   }
 
+  if(contested.length === 0){
+    container.innerHTML = `
+      <div class="card">
+        <h2>No vote needed</h2>
+        <div class="sub">Every position is running unopposed this cycle — no ballot required.</div>
+        <div class="candidate-pool" style="margin-top:10px;">
+          ${uncontested.map(p => `<span class="badge">${escapeHtml(p)}: ${escapeHtml(candidates[p][0])}</span>`).join(' ')}
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   let html = `
     <div class="card">
       <h2>Cast Your Vote</h2>
