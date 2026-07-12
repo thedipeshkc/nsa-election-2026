@@ -194,6 +194,20 @@ async function submitVote(){
     return;
   }
 
+  try{
+    const subCheck = await db.collection('submissions').doc(email).get();
+    if(!subCheck.exists){
+      errEl.textContent = 'This email hasn\'t submitted preferences yet. Please submit your preferences in the Member Portal tab first, then come back to vote.';
+      errEl.style.display = 'block';
+      return;
+    }
+  }catch(e){
+    console.error(e);
+    errEl.textContent = 'Something went wrong verifying your membership. Please try again.';
+    errEl.style.display = 'block';
+    return;
+  }
+
   const contested = positions.filter(p => (candidates[p]||[]).length > 1);
   const choices = {};
   contested.forEach(pos => {
@@ -281,6 +295,7 @@ async function loadAdminData(){
   renderCandidateSelector();
   renderVotingControl();
   renderVoteTally();
+  renderVotesTable();
   renderRoster();
 }
 
@@ -445,6 +460,23 @@ function renderVoteTally(){
       </div>
     `;
   }).join('');
+}
+
+function renderVotesTable(){
+  const tbody = document.getElementById('votesTableBody');
+  if(!tbody) return;
+  const sorted = [...votes].sort((a,b)=>b.timestamp-a.timestamp);
+  tbody.innerHTML = sorted.map(v => {
+    const choiceText = Object.entries(v.choices||{}).map(([pos,name]) => `${escapeHtml(pos)}: <strong>${escapeHtml(name)}</strong>`).join('<br>') || '—';
+    return `
+      <tr>
+        <td>${escapeHtml(v.name)}</td>
+        <td>${escapeHtml(v.email)}</td>
+        <td>${choiceText}</td>
+        <td style="color:var(--muted); font-size:12px;">${new Date(v.timestamp).toLocaleString()}</td>
+      </tr>
+    `;
+  }).join('') || `<tr><td colspan="4" class="empty-state">No votes recorded yet.</td></tr>`;
 }
 
 async function finalizeResults(){

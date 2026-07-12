@@ -117,6 +117,19 @@
       </div>
 
       <div class="card">
+        <h2>Who voted</h2>
+        <div class="sub">Audit log of every ballot cast — who voted, and their exact choices.</div>
+        <div style="overflow-x:auto;">
+          <table id="votesTable">
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Choices</th><th>Submitted</th></tr>
+            </thead>
+            <tbody id="votesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
         <h2>Final roster</h2>
         <div class="sub">This is what gets announced to the group. Use the override dropdown to manually break a tie.</div>
         <div id="rosterView"></div>
@@ -131,6 +144,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
-<script src="script.js?v=4"></script>
+<script src="script.js?v=5"></script>
 </body>
 </html>
