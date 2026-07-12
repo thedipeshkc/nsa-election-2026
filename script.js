@@ -99,7 +99,7 @@ async function submitPreferences(){
   }
 }
 
-// ---------------- VOTE TAB ----------------
+//  VOTE TAB
 
 async function loadVoteView(){
   const container = document.getElementById('voteContent');
@@ -245,7 +245,7 @@ function cssEscape(str){
   return String(str).replace(/[^a-zA-Z0-9_-]/g, '_');
 }
 
-// ---------------- ADMIN ----------------
+// ADMIN
 
 function checkPasscode(){
   const val = document.getElementById('passInput').value;
@@ -366,7 +366,7 @@ function renderTally(){
   }).join('');
 }
 
-// ---- Candidate selection (admin picks who officially runs) ----
+// Candidate selection (admin picks who officially runs)
 
 function renderCandidateSelector(){
   const el = document.getElementById('candidateBlocks');
@@ -408,7 +408,7 @@ async function toggleCandidate(pos, name){
   renderVotingControl();
 }
 
-// ---- Voting open/close control ----
+// Voting open/close control
 
 function renderVotingControl(){
   const el = document.getElementById('votingControlArea');
@@ -430,7 +430,7 @@ async function toggleVoting(){
   renderVotingControl();
 }
 
-// ---- Live vote tally + finalize ----
+//Live vote tally + finalization
 
 function renderVoteTally(){
   const el = document.getElementById('voteTallyGrid');
